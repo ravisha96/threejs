@@ -43,6 +43,14 @@ app.get('/customgeometry', function (req, res) {
 	res.sendfile('./app/customGeometry.html');
 });
 
+app.get('/particles', function (req, res) {
+	res.sendfile('./app/particles.html');
+});
+
+app.get('/digitalwall', function (req, res) {
+	res.sendfile('./app/digitalWall.html');
+});
+
 /**
  * @description [Function will create a node server with the port address set above]
  */

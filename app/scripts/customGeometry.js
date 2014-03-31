@@ -1,64 +1,56 @@
-var customGeometry = (function () {
+var scene, camera, light, plane, planeGeometry, width, height, renderer, spotLight, axis;
 
-	function Geometry () {
+this.init = function () {			
 
-		var scene, camera, light, plane, planeGeometry, width, height, renderer, spotLight, axis;
+	width = window.innerWidth;
+	height = window.innerHeight;
 
-		this.init = function () {			
+	scene = new THREE.Scene();
 
-			width = window.innerWidth;
-			height = window.innerHeight;
+	camera = new THREE.PerspectiveCamera( 150, width/height, 0.1, 1000 );
+	camera.position = {
+		x: 0,
+		y: 0,
+		z: 10
+	};
+	camera.lookAt(scene.position);
 
-			scene = new THREE.Scene();
+	axis = new THREE.AxisHelper(20);
+	scene.add(axis);
 
-			camera = new THREE.PerspectiveCamera( 85, width/height, 0.1, 1000 );
-			camera.position = {
-				x: 20,
-				y: 70,
-				z: 10
-			};
-			camera.lookAt(scene.position);
+	renderer = new THREE.WebGLRenderer();
+	renderer.setClearColor(0xFFFFFF);
+	renderer.setSize(width, height);
+
+	spotLight = new THREE.SpotLight(0xFFFFFF);
+
 	
-			axis = new THREE.AxisHelper(20);
-			scene.add(axis);
+	this.createPlaneGeometry = function () {
+		planeGeometry = new THREE.PlaneGeometry( 20, 20 );
+		// assign two material
+		var material = new THREE.MeshNormalMaterial();
+		material.side = THREE.DoubleSide;
 
-			renderer = new THREE.WebGLRenderer();
-			renderer.setClearColor(0xFFFFFF);
-			renderer.setSize(width, height);
+		var wireframeMaterial = new THREE.MeshNormalMaterial();
+		wireframeMaterial.wireframe = true;		
 
-			spotLight = new THREE.SpotLight(0xFFFFFF);
+		// create a multi material
+		var mesh = THREE.SceneUtils.createMultiMaterialObject(planeGeometry, [wireframeMaterial, material]);
 
-			// planeGeometry = new THREE.PlaneGeometry( 60, 60 );
+		scene.add( mesh );
 
-			// plane = new THREE.Mesh(planeGeometry, new THREE.LineBasicMaterial( {color: 0xcccccc} ));
-			// plane.position = {
-			// 	x: -20,
-			// 	y: 40,
-			// 	z: 10				
-			// }
-			// scene.add(plane);
-			
+		return mesh;
+	};
 
-			planeGeometry = new THREE.PlaneGeometry( 60, 60 );
-			plane = new THREE.Mesh(planeGeometry, new THREE.LineBasicMaterial( {color: 0xcccccc} ));
-			plane.rotation.x = 11;
-			plane.position= {
-				x : 10,
-				y: 0,
-				z: 0,
-			};
-			scene.add( plane );
+	this.createPlaneGeometry();
 
-			$("#WebGl-output").append(renderer.domElement);
+	$("#WebGl-output").append(renderer.domElement);
 
-			renderer.render(scene, camera);
+	renderer.render(scene, camera);
+};
 
-		};
+init();
 
-		return this.init();
 
-	}
 
-	return new Geometry;
 
-})();
